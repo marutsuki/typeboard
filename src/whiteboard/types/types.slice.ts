@@ -1,8 +1,10 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../../store';
-import { BasicType, CompositeType, isCompositeType } from '../types/types';
 import { v4 } from 'uuid';
+
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+import { RootState } from '../../store';
 import { Point } from '../../util/types';
+import { BasicType, CompositeType, isCompositeType } from '../types/types';
 
 export type CreatedType = {
     value:
@@ -38,8 +40,14 @@ const typesSlice = createSlice({
     name: 'types',
     initialState: dummyInitialState as State,
     reducers: {
-        upsertType: (state, action: PayloadAction<CreatedType>) => {
+        createType: (state, action: PayloadAction<CreatedType>) => {
             state[v4()] = action.payload;
+        },
+        upsertType: (
+            state,
+            action: PayloadAction<Partial<CreatedType> & { id: string }>
+        ) => {
+            Object.assign(state[action.payload.id], action.payload);
         },
         removeType: (state, action: PayloadAction<string>) => {
             delete state[action.payload];
@@ -67,6 +75,14 @@ const typesSlice = createSlice({
 });
 
 export const typesReducer = typesSlice.reducer;
-export const { upsertType, removeType, updateTypeLocation, connectTypes } =
-    typesSlice.actions;
+export const {
+    createType,
+    upsertType,
+    removeType,
+    updateTypeLocation,
+    connectTypes,
+} = typesSlice.actions;
 export const selectTypes = (state: RootState) => state.types;
+
+export const selectTypeById = (id: string) =>
+    createSelector(selectTypes, (types) => types[id] || null);

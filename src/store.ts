@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import { typesReducer } from './whiteboard/types/types.slice';
+import { editReducer } from './whiteboard/edit/edit.slice';
 
 const store = configureStore({
     reducer: {
+        edit: editReducer,
         types: typesReducer,
     },
 });

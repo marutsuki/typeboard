@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { AppDispatch } from '../../store';
 import { StaticBlock } from '../types/Block';
-import { upsertType } from '../types/types.slice';
+import { createType } from '../types/types.slice';
 import Drawable from './Drawable';
 
 export const drawables = (dispatch: AppDispatch): ReactNode[] => [
@@ -9,7 +9,7 @@ export const drawables = (dispatch: AppDispatch): ReactNode[] => [
         name={'Basic Type'}
         description={'A elementary TypeScript type'}
         exampleComponent={<StaticBlock value={'string'} />}
-        draw={(location) => dispatch(upsertType({ value: 'string', location }))}
+        draw={(location) => dispatch(createType({ value: 'string', location }))}
     />,
     <Drawable
         name={'Composite Type'}
@@ -19,7 +19,7 @@ export const drawables = (dispatch: AppDispatch): ReactNode[] => [
         exampleComponent={<StaticBlock value={'T'} />}
         draw={(location) =>
             dispatch(
-                upsertType({ value: { name: 'T', children: [] }, location })
+                createType({ value: { name: 'T', children: [] }, location })
             )
         }
     />,

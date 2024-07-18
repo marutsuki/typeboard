@@ -1,27 +1,6 @@
-import BasicTypeBlock from './BasicTypeBlock';
-import ComplexTypeBlock from './CompositeTypeBlock';
-import { isBasicType } from './types';
+import TypeBlock from './TypeBlock';
 import { CreatedType } from './types.slice';
 
-export const typeToComponent = (
-    id: string,
-    { value, ...props }: CreatedType
-) => {
-    return isBasicType(value) ? (
-        <BasicTypeBlock
-            key={id}
-            id={id}
-            value={value}
-            type="basic"
-            {...props}
-        />
-    ) : (
-        <ComplexTypeBlock
-            key={id}
-            id={id}
-            value={value}
-            type="composite"
-            {...props}
-        />
-    );
+export const typeToComponent = (id: string, props: CreatedType) => {
+    return <TypeBlock key={id} id={id} {...props} />;
 };
