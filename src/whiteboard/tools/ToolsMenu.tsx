@@ -1,30 +1,16 @@
 import { FC } from 'react';
-import Drawable from './Drawable';
-import { StaticBlock } from '../types/Block';
+import { useAppDispatch } from '../../store';
+import { drawables } from './drawables';
+import { tools } from './tools';
 
-type Tool = {
-    name: string;
-    description: string;
-    use: () => void;
-};
-
-type Props = {
-    tools: Tool[];
-};
-
-const ToolsMenu: FC<Props> = ({ tools }: Props) => {
+const ToolsMenu: FC = () => {
+    const dispatch = useAppDispatch();
     return (
-        <div className="w-1/6 h-full bg-gray-100">
-            {tools.map((tool) => (
-                <button key={tool.name} className="w-full h-16">
-                    {tool.name}
-                </button>
-            ))}
-            <Drawable
-                exampleComponent={<StaticBlock value={'string'} />}
-                name={'Basic Type'}
-                description={'A elementary TypeScript type'}
-            />
+        <div className="w-96 h-full bg-gray-100">
+            <section>{tools(dispatch)}</section>
+            <section className="p-4 grid grid-cols-2 place-items-center">
+                {drawables(dispatch)}
+            </section>
         </div>
     );
 };

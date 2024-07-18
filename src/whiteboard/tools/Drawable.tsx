@@ -1,16 +1,18 @@
 import { FC, ReactNode, useEffect, useRef, useState } from 'react';
 import { globalConfig } from '../../global.config';
+import { Point } from '../../util/types';
 
 type Props = {
     name: string;
     description: string;
     exampleComponent: ReactNode;
+    draw: (point: Point) => void;
 };
 
 const Drawable: FC<Props> = ({
     name,
-    description,
     exampleComponent,
+    draw,
 }: Props) => {
     const ref = useRef<HTMLSpanElement | null>(null);
     const [interacting, setInteracting] = useState(false);
@@ -18,7 +20,7 @@ const Drawable: FC<Props> = ({
     useEffect(() => {
         if (!interacting) return;
 
-        const onMouseUp = () => {
+        const onMouseUp = (e: MouseEvent) => {
             setInteracting(false);
             const hoveredElements = document
                 .querySelectorAll(':hover')
@@ -30,6 +32,11 @@ const Drawable: FC<Props> = ({
             ) {
                 if (elem.value.id === globalConfig.whiteboardId) {
                     console.info(`Dropped a [${name}] component on whiteboard`);
+                    const whiteboard = elem.value.getBoundingClientRect();
+                    draw({
+                        x: e.clientX - whiteboard.left,
+                        y: e.clientY - whiteboard.top,
+                    });
                     return;
                 }
             }
@@ -49,15 +56,16 @@ const Drawable: FC<Props> = ({
             window.removeEventListener('mouseup', onMouseUp);
             window.removeEventListener('mousemove', onMouseMove);
         };
-    }, [interacting]);
+    }, [draw, interacting, name]);
 
     return (
         <>
             <div
-                className="w-1/6 h-full bg-gray-100"
+                className="w-1/2 h-full bg-gray-100 flex flex-col items-center justify-center"
                 onMouseDown={() => setInteracting(true)}
             >
                 {exampleComponent}
+                <h3 className="text-center">{name}</h3>
             </div>
             {interacting ? (
                 <span className="absolute" ref={ref}>
