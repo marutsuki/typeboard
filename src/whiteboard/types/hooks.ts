@@ -54,7 +54,6 @@ export const useDragging = (
         const elem = ref.current;
         if (elem) {
             const rect = elem.getBoundingClientRect();
-            console.log(rect, initialLocation.x + rect.width / 2);
             elem.style.left = initialLocation.x - rect.width / 2 + 'px';
             elem.style.top = initialLocation.y - rect.height / 2 + 'px';
             elem.addEventListener('mousedown', startDragging);

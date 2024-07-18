@@ -18,9 +18,20 @@ const dummyInitialState = {
     '2': {
         value: {
             name: 'T',
-            children: ['1'],
+            children: ['1', '3'],
         },
         location: { x: 250, y: 500 },
+    },
+    '3': {
+        value: 'boolean',
+        location: { x: 300, y: 350 },
+    },
+    '4': {
+        value: {
+            name: 'K',
+            children: ['1', '2'],
+        },
+        location: { x: 500, y: 0 },
     },
 };
 const typesSlice = createSlice({
