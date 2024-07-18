@@ -1,15 +1,15 @@
 import { FC } from 'react';
-import Block from './Block';
+import Block, { BlockProps } from './Block';
 import { CompositeType } from './types';
 
 type Props = {
     id: string;
-    type: CompositeType;
-};
+    value: CompositeType;
+} & Omit<BlockProps, 'value'>;
 
-const ComplexTypeBlock: FC<Props> = ({ type }: Props) => {
-    const { name } = type;
-    return <Block value={name} />;
+const ComplexTypeBlock: FC<Props> = ({ value, ...props }: Props) => {
+    const { name } = value;
+    return <Block value={name} {...props} />;
 };
 
 export default ComplexTypeBlock;

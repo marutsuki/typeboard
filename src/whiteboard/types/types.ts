@@ -18,7 +18,6 @@ export type BasicType = (typeof types)[number];
 
 export type CompositeType = {
     name: string;
-    children: (CompositeType | BasicType)[];
 };
 
 export const isBasicType = (

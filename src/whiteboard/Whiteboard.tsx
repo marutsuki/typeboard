@@ -1,14 +1,18 @@
 import { FC } from 'react';
 import { useSelector } from 'react-redux';
-import { selectAllTypes } from './types/types.slice';
+import { selectTypes } from './types/types.slice';
 import { typeToComponent } from './types/types.util';
+import Lines from './graph/Lines';
 
 const Whiteboard: FC<object> = () => {
-    const types = useSelector(selectAllTypes);
+    const types = useSelector(selectTypes);
 
     return (
         <div className="w-full h-full relative">
-            {types.map(typeToComponent)}
+            <Lines />
+            {Object.entries(types).map(([id, type]) =>
+                typeToComponent(id, type)
+            )}
         </div>
     );
 };

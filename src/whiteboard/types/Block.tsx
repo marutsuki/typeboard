@@ -1,14 +1,27 @@
-import { FC, useRef } from 'react';
+import { FC, useCallback, useRef } from 'react';
 import { useDragging } from './hooks';
+import { Point } from '../../util/types';
+import { useDispatch } from 'react-redux';
+import { updateTypeLocation } from './types.slice';
 
-type Props = {
+export type BlockProps = {
+    id: string;
     value: string;
+    location: Point;
 };
 
-const Block: FC<Props> = ({ value }: { value: string }) => {
+const Block: FC<BlockProps> = ({ id, value, location }: BlockProps) => {
     const blockRef = useRef<HTMLSpanElement>(null);
+    const dispatch = useDispatch();
 
-    useDragging(blockRef);
+    const onDrag = useCallback(
+        (point: Point) => {
+            dispatch(updateTypeLocation({ id: id, location: point }));
+        },
+        [dispatch, id]
+    );
+
+    useDragging(location, blockRef, onDrag);
 
     return (
         <span

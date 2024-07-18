@@ -1,6 +1,11 @@
 import { RefObject, useCallback, useEffect } from 'react';
+import { Point } from '../../util/types';
 
-export const useDragging = (ref: RefObject<HTMLElement>) => {
+export const useDragging = (
+    initialLocation: Point,
+    ref: RefObject<HTMLElement>,
+    onDrag: (point: Point) => void
+) => {
     const startDragging = useCallback(
         (oe: MouseEvent) => {
             let prevX = oe.clientX;
@@ -9,22 +14,26 @@ export const useDragging = (ref: RefObject<HTMLElement>) => {
             const drag = (e: MouseEvent) => {
                 e.preventDefault();
                 if (ref.current !== null) {
+                    const rect = ref.current.getBoundingClientRect();
                     const deltaX = e.clientX - prevX;
                     const deltaY = e.clientY - prevY;
-                    ref.current.style.left =
-                        clamp(
-                            parseInt(ref.current.style.left.split('px')[0]) +
-                                deltaX,
-                            0,
-                            window.innerWidth - ref.current.clientWidth
-                        ) + 'px';
-                    ref.current.style.top =
-                        clamp(
-                            parseInt(ref.current.style.top.split('px')[0]) +
-                                deltaY,
-                            0,
-                            window.innerHeight - ref.current.clientHeight
-                        ) + 'px';
+                    const left = clamp(
+                        parseInt(ref.current.style.left.split('px')[0]) +
+                            deltaX,
+                        0,
+                        window.innerWidth - ref.current.clientWidth
+                    );
+                    const top = clamp(
+                        parseInt(ref.current.style.top.split('px')[0]) + deltaY,
+                        0,
+                        window.innerHeight - ref.current.clientHeight
+                    );
+                    ref.current.style.left = left + 'px';
+                    ref.current.style.top = top + 'px';
+                    onDrag({
+                        x: left + rect.width / 2,
+                        y: top + rect.height / 2,
+                    });
                 }
                 prevX = e.clientX;
                 prevY = e.clientY;
@@ -38,19 +47,23 @@ export const useDragging = (ref: RefObject<HTMLElement>) => {
             window.addEventListener('mousemove', drag);
             window.addEventListener('mouseup', dragFinish);
         },
-        [ref]
+        [onDrag, ref]
     );
 
     useEffect(() => {
         const elem = ref.current;
         if (elem) {
-            if (elem.style.top === '') {
-                elem.style.top = elem.getBoundingClientRect().top + 'px';
-            }
-            if (elem.style.left === '') {
-                elem.style.left = elem.getBoundingClientRect().left + 'px';
-            }
+            const rect = elem.getBoundingClientRect();
+            console.log(rect, initialLocation.x + rect.width / 2);
+            elem.style.left = initialLocation.x - rect.width / 2 + 'px';
+            elem.style.top = initialLocation.y - rect.height / 2 + 'px';
             elem.addEventListener('mousedown', startDragging);
+        }
+    }, [initialLocation.x, initialLocation.y, ref, startDragging]);
+
+    useEffect(() => {
+        const elem = ref.current;
+        if (elem) {
             const observer = new ResizeObserver(() => {
                 if (
                     parseInt(elem.style.left) + elem.clientWidth >
