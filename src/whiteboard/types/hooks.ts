@@ -56,7 +56,6 @@ export const useDragging = (ref: RefObject<HTMLElement>) => {
                     parseInt(elem.style.left) + elem.clientWidth >
                     window.innerWidth
                 ) {
-                    console.log('left');
                     elem.style.left =
                         window.innerWidth - elem.clientWidth + 'px';
                 }

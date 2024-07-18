@@ -1,10 +1,14 @@
 import { FC } from 'react';
-import BasicTypeBlock from './elements/BasicTypeBlock';
+import { useSelector } from 'react-redux';
+import { selectAllTypes } from './types/types.slice';
+import { typeToComponent } from './types/types.util';
 
 const Whiteboard: FC<object> = () => {
+    const types = useSelector(selectAllTypes);
+
     return (
-        <div className="w-full h-full">
-            <BasicTypeBlock value={'string'} />
+        <div className="w-full h-full relative">
+            {types.map(typeToComponent)}
         </div>
     );
 };

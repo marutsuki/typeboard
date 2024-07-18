@@ -1,12 +1,11 @@
 import { FC, useRef } from 'react';
-import { BasicType } from './types';
 import { useDragging } from './hooks';
 
 type Props = {
-    value: BasicType;
+    value: string;
 };
 
-const BasicTypeBlock: FC<Props> = ({ value }: { value: BasicType }) => {
+const Block: FC<Props> = ({ value }: { value: string }) => {
     const blockRef = useRef<HTMLSpanElement>(null);
 
     useDragging(blockRef);
@@ -16,9 +15,9 @@ const BasicTypeBlock: FC<Props> = ({ value }: { value: BasicType }) => {
             ref={blockRef}
             className="cursor-pointer absolute rounded-lg bg-violet-300 h-12 w-24 flex items-center justify-center"
         >
-            <p className="font-bold">{value}</p>
+            <p className="font-bold select-none">{value}</p>
         </span>
     );
 };
 
-export default BasicTypeBlock;
+export default Block;
