@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
-import { BasicType, CompositeType } from '../types/types';
+import { BasicType, CompositeType, isCompositeType } from '../types/types';
 import { v4 } from 'uuid';
 import { Point } from '../../util/types';
 
@@ -52,10 +52,21 @@ const typesSlice = createSlice({
                 state[action.payload.id].location = action.payload.location;
             }
         },
+        connectTypes: (
+            state,
+            action: PayloadAction<{ parent: string; child: string }>
+        ) => {
+            if (state[action.payload.parent] && state[action.payload.child]) {
+                const parent = state[action.payload.parent].value;
+                if (isCompositeType(parent)) {
+                    parent.children.push(action.payload.child);
+                }
+            }
+        },
     },
 });
 
 export const typesReducer = typesSlice.reducer;
-export const { upsertType, removeType, updateTypeLocation } =
+export const { upsertType, removeType, updateTypeLocation, connectTypes } =
     typesSlice.actions;
 export const selectTypes = (state: RootState) => state.types;

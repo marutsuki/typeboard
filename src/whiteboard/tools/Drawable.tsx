@@ -9,11 +9,7 @@ type Props = {
     draw: (point: Point) => void;
 };
 
-const Drawable: FC<Props> = ({
-    name,
-    exampleComponent,
-    draw,
-}: Props) => {
+const Drawable: FC<Props> = ({ name, exampleComponent, draw }: Props) => {
     const ref = useRef<HTMLSpanElement | null>(null);
     const [interacting, setInteracting] = useState(false);
 
@@ -69,7 +65,7 @@ const Drawable: FC<Props> = ({
             </div>
             {interacting ? (
                 <span className="absolute" ref={ref}>
-                    {exampleComponent}{' '}
+                    {exampleComponent}
                 </span>
             ) : null}
         </>

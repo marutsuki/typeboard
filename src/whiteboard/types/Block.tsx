@@ -1,11 +1,4 @@
-import {
-    FC,
-    forwardRef,
-    MutableRefObject,
-    RefObject,
-    useCallback,
-    useRef,
-} from 'react';
+import { FC, forwardRef, useCallback, useRef } from 'react';
 import { useDragging } from './hooks';
 import { Point } from '../../util/types';
 import { useDispatch } from 'react-redux';
@@ -15,6 +8,7 @@ export type BlockProps = {
     id: string;
     value: string;
     location: Point;
+    type: string;
     dynamic?: boolean;
 };
 
@@ -22,7 +16,11 @@ const Block: FC<BlockProps> = ({ dynamic = true, ...props }: BlockProps) => {
     return dynamic ? <DynamicBlock {...props} /> : <StaticBlock {...props} />;
 };
 
-const DynamicBlock: FC<BlockProps> = ({ id, value, location }: BlockProps) => {
+const DynamicBlock: FC<BlockProps> = ({
+    id,
+    location,
+    ...props
+}: BlockProps) => {
     const blockRef = useRef<HTMLSpanElement>(null);
     const dispatch = useDispatch();
 
@@ -35,18 +33,24 @@ const DynamicBlock: FC<BlockProps> = ({ id, value, location }: BlockProps) => {
 
     useDragging(location, blockRef, onDrag);
 
-    return <StaticBlock className="!absolute" ref={blockRef} value={value} />;
+    return (
+        <StaticBlock id={id} className="!absolute" ref={blockRef} {...props} />
+    );
 };
 
 export const StaticBlock = forwardRef<
     HTMLSpanElement,
     {
+        id?: string;
         value: string;
+        type?: string;
         className?: string;
     }
->(({ value, className }, ref) => {
+>(({ id, value, type, className }, ref) => {
     return (
         <span
+            {...(id && { id })}
+            {...(type && { 'data-type': type })}
             ref={ref}
             className={`${className ? className : ''} cursor-pointer relative rounded-lg bg-violet-300 h-12 w-24 flex items-center justify-center`}
         >

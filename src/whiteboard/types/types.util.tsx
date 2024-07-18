@@ -8,8 +8,20 @@ export const typeToComponent = (
     { value, ...props }: CreatedType
 ) => {
     return isBasicType(value) ? (
-        <BasicTypeBlock key={id} id={id} value={value} {...props} />
+        <BasicTypeBlock
+            key={id}
+            id={id}
+            value={value}
+            type="basic"
+            {...props}
+        />
     ) : (
-        <ComplexTypeBlock key={id} id={id} value={value} {...props} />
+        <ComplexTypeBlock
+            key={id}
+            id={id}
+            value={value}
+            type="composite"
+            {...props}
+        />
     );
 };
